@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Applicant extends Model
+class EducationLevel extends Model
 {
     use HasFactory;
-    public function educationLevel()
+
+    public function applicants()
     {
-        return $this->belongsTo(EducationLevel::class);
+        return $this->hasMany(Applicant::class);
     }
 }

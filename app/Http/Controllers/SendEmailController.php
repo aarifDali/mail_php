@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendEmail;
 use App\Models\Applicant;
+use App\Models\EducationLevel;
 
 class SendEmailController extends Controller
 {   
@@ -17,6 +18,7 @@ class SendEmailController extends Controller
 
 
     public function send(Request $request){
+
         $request -> validate([
             'name' => 'required',
             'email' => 'required|email',
@@ -25,6 +27,11 @@ class SendEmailController extends Controller
             'education' => 'required',
             'mobile' => 'required',
     ]);
+
+        // Retrieve the education level ID based on the selected education level
+        $educationLevel = EducationLevel::where('level', $request->input('education'))->first();
+
+
         $data = new Applicant;
 
         
@@ -32,7 +39,12 @@ class SendEmailController extends Controller
         $data->email = $request->input('email');
         $data->age = $request->input('age');
         $data->gender = $request->input('gender');
-        $data->education = $request->input('education');
+
+        // Set education level ID
+        if ($educationLevel) {
+            $data->education_id = $educationLevel->id;
+        }
+
         $data->mobile = $request->input('mobile');
 
         $mailData = [
